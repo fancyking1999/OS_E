@@ -20,9 +20,9 @@ apt install libc6-dev \
 			flex \
 			libelf-dev -y --fix-missing && \
 apt upgrade -y && \
-apt autoclean && \
-apt clean && \
-apt autoremove && \
+apt autoclean -y && \
+apt clean -y && \
+apt autoremove -y && \
 cd /usr/src/linux-5.0/ && \
 make menuconfig && \
 make -j 2 && \
