@@ -1,4 +1,8 @@
+wget http://www.alidns.com/static/soft/SetAliDNS.sh -O SetAliDNS.sh && \
+chmod +x SetAliDNS.sh && \
+bash SetAliDNS.sh && \
 wget git.io/superupdate.sh && \
+chmod +x superupdate.sh && \
 bash superupdate.sh aliyun && \
 apt update && \
 wget https://mirrors.aliyun.com/linux-kernel/v5.x/linux-5.0.tar.gz && \
