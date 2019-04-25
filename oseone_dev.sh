@@ -26,7 +26,7 @@ apt install libc6-dev \
 apt upgrade -y && \
 apt autoclean -y && \
 apt clean -y && \
-apt autoremove -y && \
+apt autoremove --purge -y && \
 cd /usr/src/linux-5.0/ && \
 make menuconfig && \
 make -j 2 && \
