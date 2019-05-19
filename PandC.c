@@ -3,7 +3,7 @@
  * @author FancyKings (YellyHornby@qq.com)
  * @brief Using semaphore method to solve producers and consumer problem
  * @version 1.0
- * @date 2019-05-18
+ * @date 2019-05-18 - 2019-05-19
  *
  * @copyright Copyright (c) 2019
  *
@@ -74,14 +74,16 @@ struct shared_data *shared;
 
 int empty, full, mutex;
 int shared_memory_id;
-void *shared_memory_addr = NULL;
+void *shared_memory_addr;
 
 int producer() {
   wait(empty);
   wait(mutex);
 
   char ch = fgetc(shared->fp_in);
+  // 将文件内容逐个打印在屏幕上
   printf("%c", ch);
+  // 已经读到文件尾部
   if (ch == EOF) {
     signal(mutex);
     return 0;
@@ -98,7 +100,9 @@ int producer() {
 int consumer() {
   wait(full);
   wait(mutex);
-  printf("out: %d", shared->out);
+  // 进入临界区
+
+  printf("outid: %d", shared->out);
   char out_char = shared->buff[shared->out];
   if (out_char == EOF) {
     signal(mutex);
@@ -107,8 +111,9 @@ int consumer() {
   shared->out = (shared->out + 1) % N;
   fprintf(shared->fp_out, "%c", out_char);
   fflush(shared->fp_out);
-  printf("%c", out_char);
+  printf("%c+\t", out_char);
 
+  // 退出临界区
   signal(mutex);
   signal(empty);
 
@@ -116,7 +121,8 @@ int consumer() {
 }
 
 int main(int argc, char const *argv[]) {
-  shared_memory_id = shmget(12345, sizeof(struct shared_data), 0666 | IPC_CREAT);
+  shared_memory_id =
+      shmget(12345, sizeof(struct shared_data), 0666 | IPC_CREAT);
   shared_memory_addr = shmat(shared_memory_id, 0, 0);
   shared = (struct shared_data *)shared_memory_addr;
   shared->fp_in = fopen("in", "r");
@@ -135,18 +141,12 @@ int main(int argc, char const *argv[]) {
   initialize_value_of_sem(mutex, 1);
 
   pid_t pidone, pidtwo;
-  while (pidone == -1) {
-    pidone = fork();
-  }
+  while ((pidone = fork()) == -1);
   if (pidone > 0) {
-    while (pidtwo == -1) {
-      pidtwo = fork();
-    }
-    while (producer()) {
-    };
+    while ((pidtwo = fork()) == -1);
+    while (producer());
   } else {
-    while (consumer()) {
-    };
+    while (consumer());
     printf("\n");
   }
 
