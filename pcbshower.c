@@ -71,8 +71,8 @@ int scull_seq_show(struct seq_file *m, void *v) {
   seq_printf(m, "%-11lu ", shower->nvcsw);
   seq_printf(m, "%5lu ", shower->nivcsw);
   seq_printf(m, "%13lu ", shower->utime);
-  seq_printf(m, "%13lu ", shower->stime);
-  // seq_printf( m,  "%lu ", shower->real_start_time.tv_sec);
+  seq_printf(m, "%13llu ", shower->stime);
+  // seq_printf( m,  "%llu ", shower->real_start_time.tv_sec);
   seq_puts(m, "\n");
   tmp_state = shower->state;            // put p->state to variable t_state
   tmp_exit_state = shower->exit_state;  // similar to above
